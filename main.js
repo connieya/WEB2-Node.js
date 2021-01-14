@@ -4,7 +4,7 @@ var url = require('url');  // url == 모듈  , url이라는 모듈을 사용할 
 var app = http.createServer(function(request,response){
     var urls = request.url;
     var queryData = url.parse(urls, true).query;
-    var title = queryData.id;
+   
     console.log("url : " , url);
     console.log("queryData : " ,queryData);
     console.log("queryData.id : " ,queryData.id);
@@ -14,42 +14,74 @@ var app = http.createServer(function(request,response){
     var pathname = url.parse(urls, true).pathname;
 
     if(pathname === '/'){
+        if(queryData.id === undefined){
+            var title= "Welcome";
+            var description = "Hello, Node.js";
+            fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
+            
+                
+                var template = `
+                <!doctype html>
+                <html>
+                <head>
+                <title>WEB1 - ${title}</title>
+                <meta charset="utf-8">
+                </head>
+                <body>
+                <h1><a href="/">WEB</a></h1>
+                <ol>
+                <li><a href="/?id=HTML">HTML</a></li>   
+                <li><a href="/?id=CSS">CSS</a></li> 
+                <li><a href="/?id=JavaScript">JavaScript</a></li> 
+                </ol>
+                <h2>${title}</h2>
+                <p>
+                ${description}
+                <p>
+                </body>
+                </html>
+                
+                
+                `;
+                response.writeHead(200);
+                response.end(template);
+            })
+        }else{
+            var title = queryData.id;
+            fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
+                // 왜 console에 값이 두 번씩 찍히냐고...
+                // li 태그안에 a 태그 url 부분에  1.html, 2.html ,3.html 대신에
+                // id 값을 넣어 undefined 대신에 해당 값을 출력하게 할 수 있었다.
+                
+                var template = `
+                <!doctype html>
+                <html>
+                <head>
+                <title>WEB1 - ${title}</title>
+                <meta charset="utf-8">
+                </head>
+                <body>
+                <h1><a href="/">WEB</a></h1>
+                <ol>
+                <li><a href="/?id=HTML">HTML</a></li>   
+                <li><a href="/?id=CSS">CSS</a></li> 
+                <li><a href="/?id=JavaScript">JavaScript</a></li> 
+                </ol>
+                <h2>${title}</h2>
+                <p>
+                ${description}
+                <p>
+                </body>
+                </html>
+                
+                
+                `;
+                response.writeHead(200);
+                response.end(template);
+            })
 
-        
-        fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
-            // 왜 console에 값이 두 번씩 찍히냐고...
-            // li 태그안에 a 태그 url 부분에  1.html, 2.html ,3.html 대신에
-            // id 값을 넣어 undefined 대신에 해당 값을 출력하게 할 수 있었다.
-            
-            var template = `
-            <!doctype html>
-            <html>
-            <head>
-            <title>WEB1 - ${title}</title>
-            <meta charset="utf-8">
-            </head>
-            <body>
-            <h1><a href="/">WEB</a></h1>
-            <ol>
-            <li><a href="/?id=HTML">HTML</a></li>   
-            <li><a href="/?id=CSS">CSS</a></li> 
-            <li><a href="/?id=JavaScript">JavaScript</a></li> 
-            </ol>
-            <h2>${title}</h2>
-            <p>
-            ${description}
-            <p>
-            </body>
-            </html>
-            
-            
-            `;
-            response.writeHead(200);
-            response.end(template);
-        })
-        // 1.html 을 전부 카피해서 넣을거다
-        
-        
+        }        
+        // 1.html 을 전부 카피해서 넣을거다  
         // response.end(queryData.id);
         // console.log("dddd : " ,__dirname + _url);
         //  response.end(fs.readFileSync(__dirname + _url));
