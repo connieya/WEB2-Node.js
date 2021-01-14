@@ -74,3 +74,16 @@ console.log('C')
 A다음에 result를 실행하기도 전에 C가 먼저 콘솔에 찍히고 그다음 함수가 호출되면서 실행 되었다.
 
 
+## callback
+
+```javascript
+fs.readFile('sample.txt' , 'utf8' ,function(err, result)
+```
+
+Node.js야 니가 갖고있는 readFile을 이용해서 파일을 읽어와
+근데 시간이 조금 걸리니깐 작업이 끝난 다음에 내가 너한테 전달한 세번째 인자인 함수를 실행시켜!!
+
+그리고 함수를 호출한다.
+
+감이 안오는데? ㄷㄷ
+
