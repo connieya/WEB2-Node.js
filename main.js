@@ -15,38 +15,54 @@ var app = http.createServer(function(request,response){
 
     if(pathname === '/'){
         if(queryData.id === undefined){
-            var title= "Welcome";
-            var description = "Hello, Node.js";
-            fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
-            
-                
+
+            fs.readdir('./data' ,function(error , fileList){
+                console.log("fileList ssssss : " , fileList.length);
+                var title= "Welcome";
+                var description = "Hello, Node.js";
+                var list = '<ul>';
+
+                for(var i=0 ; i< fileList.length; i++){
+                    list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
+                }
+                list = list + '</ul>'
+
                 var template = `
-                <!doctype html>
-                <html>
-                <head>
-                <title>WEB1 - ${title}</title>
-                <meta charset="utf-8">
-                </head>
-                <body>
-                <h1><a href="/">WEB</a></h1>
-                <ol>
-                <li><a href="/?id=HTML">HTML</a></li>   
-                <li><a href="/?id=CSS">CSS</a></li> 
-                <li><a href="/?id=JavaScript">JavaScript</a></li> 
-                </ol>
-                <h2>${title}</h2>
-                <p>
-                ${description}
-                <p>
-                </body>
-                </html>
-                
-                
-                `;
-                response.writeHead(200);
-                response.end(template);
-            })
+                    <!doctype html>
+                    <html>
+                    <head>
+                    <title>WEB1 - ${title}</title>
+                    <meta charset="utf-8">
+                    </head>
+                    <body>
+                    <h1><a href="/">WEB</a></h1>
+                   ${list}
+                    <h2>${title}</h2>
+                    <p>
+                    ${description}
+                    <p>
+                    </body>
+                    </html>
+                    
+                    
+                    `;
+                    response.writeHead(200);
+                    response.end(template);
+             
+            } )
+         
         }else{
+            fs.readdir('./data' ,function(error , fileList){
+                console.log("fileList ssssss : " , fileList.length);
+                var title= "Welcome";
+                var description = "Hello, Node.js";
+                var list = '<ul>';
+
+                for(var i=0 ; i< fileList.length; i++){
+                    list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
+                }
+                list = list + '</ul>'
+            
             var title = queryData.id;
             fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
                 // 왜 console에 값이 두 번씩 찍히냐고...
@@ -62,11 +78,7 @@ var app = http.createServer(function(request,response){
                 </head>
                 <body>
                 <h1><a href="/">WEB</a></h1>
-                <ol>
-                <li><a href="/?id=HTML">HTML</a></li>   
-                <li><a href="/?id=CSS">CSS</a></li> 
-                <li><a href="/?id=JavaScript">JavaScript</a></li> 
-                </ol>
+                 ${list}
                 <h2>${title}</h2>
                 <p>
                 ${description}
@@ -79,7 +91,7 @@ var app = http.createServer(function(request,response){
                 response.writeHead(200);
                 response.end(template);
             })
-
+        })
         }        
         // 1.html 을 전부 카피해서 넣을거다  
         // response.end(queryData.id);
