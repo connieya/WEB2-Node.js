@@ -37,7 +37,7 @@ B
 ![image](https://user-images.githubusercontent.com/66653324/104566085-86b1a300-5690-11eb-9889-4c901beecb69.png)
 
 
- ######- readFile (비동기)
+ ###### - readFile (비동기)
 
 ```javascript
 console.log('A')
