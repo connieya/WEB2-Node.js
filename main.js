@@ -1,6 +1,40 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');  // url == 모듈  , url이라는 모듈을 사용할 것이고 변수 명은 url이다.
+
+function templateHTML(title,list ,body){
+    return `
+    <!doctype html>
+    <html>
+    <head>
+    <title>WEB1 - ${title}</title>
+    <meta charset="utf-8">
+    </head>
+    <body>
+    <h1><a href="/">WEB</a></h1>
+     ${list}
+     ${body}
+    <p>
+    </body>
+    </html>
+    
+    
+    `;
+}
+
+function templateList(fileList){
+    var list = '<ul>';
+    for(var i=0 ; i< fileList.length; i++){
+
+        list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
+    }
+    list = list + '</ul>'
+
+    return list;
+}
+
+
+
 var app = http.createServer(function(request,response){
     var urls = request.url;
     var queryData = url.parse(urls, true).query;
@@ -20,32 +54,9 @@ var app = http.createServer(function(request,response){
                 console.log("fileList ssssss : " , fileList.length);
                 var title= "Welcome";
                 var description = "Hello, Node.js";
-                var list = '<ul>';
+                var list = templateList(fileList);
+                var template = templateHTML(title,list ,`<h2>${title}</h2><p>${description}</p>`);
 
-                for(var i=0 ; i< fileList.length; i++){
-                    list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
-                }
-                list = list + '</ul>'
-
-                var template = `
-                    <!doctype html>
-                    <html>
-                    <head>
-                    <title>WEB1 - ${title}</title>
-                    <meta charset="utf-8">
-                    </head>
-                    <body>
-                    <h1><a href="/">WEB</a></h1>
-                   ${list}
-                    <h2>${title}</h2>
-                    <p>
-                    ${description}
-                    <p>
-                    </body>
-                    </html>
-                    
-                    
-                    `;
                     response.writeHead(200);
                     response.end(template);
              
@@ -54,40 +65,13 @@ var app = http.createServer(function(request,response){
         }else{
             fs.readdir('./data' ,function(error , fileList){
                 console.log("fileList ssssss : " , fileList.length);
-                var title= "Welcome";
-                var description = "Hello, Node.js";
-                var list = '<ul>';
-
-                for(var i=0 ; i< fileList.length; i++){
-                    list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
-                }
-                list = list + '</ul>'
-            
             var title = queryData.id;
             fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
                 // 왜 console에 값이 두 번씩 찍히냐고...
                 // li 태그안에 a 태그 url 부분에  1.html, 2.html ,3.html 대신에
-                // id 값을 넣어 undefined 대신에 해당 값을 출력하게 할 수 있었다.
-                
-                var template = `
-                <!doctype html>
-                <html>
-                <head>
-                <title>WEB1 - ${title}</title>
-                <meta charset="utf-8">
-                </head>
-                <body>
-                <h1><a href="/">WEB</a></h1>
-                 ${list}
-                <h2>${title}</h2>
-                <p>
-                ${description}
-                <p>
-                </body>
-                </html>
-                
-                
-                `;
+                // id 값을 넣어 undefined 대신에 해당 값을 출력하게 할 수 있었다.     
+                var list = templateList(fileList);
+                var template = templateHTML(title, list ,`<h2>${title}</h2><p>${description}</p>`);
                 response.writeHead(200);
                 response.end(template);
             })
