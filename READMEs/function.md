@@ -21,10 +21,10 @@ var template =  `
     
     `;
     
-    ```
-    #### 중복되는 부분이 있기 때문에 함수로 정리
+```
+#### 중복되는 부분이 있기 때문에 함수로 정리
     
-    ```javascript
+  ```javascript
     function templateHTML(title,list ,body){
     return `
     <!doctype html>
@@ -44,26 +44,25 @@ var template =  `
     
     `;
     
-    ```
+```
     
-    ```javascript
+```javascript
     var template = templateHTML(title,list ,`<h2>${title}</h2><p>${description}</p>`);
     
-    ```
+```
     
     
-    --------------------------
+    -------------------------------------------
     반복문이 중복 됨
     
-    ```javascript
+```javascript
      for(var i=0 ; i< fileList.length; i++){
                     list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
                 }
                 list = list + '</ul>'
     
-    ```
-    
-    ```javascript
+```
+```javascript
     function templateList(fileList){
     var list = '<ul>';
     for(var i=0 ; i< fileList.length; i++){
@@ -74,9 +73,9 @@ var template =  `
 
     return list;
 }
-    //밑에서 사용
+    //밑에서 사용 변수 list 함수 
     
         var list = templateList(fileList);
-    ```
+   ```
     
     
