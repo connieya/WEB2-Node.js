@@ -14,7 +14,7 @@ __synchronous & asynchronous__
 
 #### readFileSync & readFile
 
-- readFileSync (동기)
+###### - readFileSync (동기)
 
 `sync.js`
 ```javascript
@@ -37,9 +37,9 @@ B
 ![image](https://user-images.githubusercontent.com/66653324/104566085-86b1a300-5690-11eb-9889-4c901beecb69.png)
 
 
-- readFile (비동기)
+ ######- readFile (비동기)
 
-```
+```javascript
 console.log('A')
 fs.readFile('sample.txt' , 'utf8' ,function(err, result){
     console.log(result);
@@ -60,7 +60,7 @@ readFile은 리턴 값이 안주고, 대신 세번째인자로 함수를 줘야�
 
 **실행**
 
-```
+```javascript
 console.log('A')
 fs.readFile('sample.txt' , 'utf8' ,function(err, result){
     console.log(result);
