@@ -1,4 +1,4 @@
- ## callback
+##  callback
 
 `callback.js`
 
@@ -34,7 +34,6 @@ slowfunc(b); //   B
 slowfunc(cd); // hello
 
 ```
-
- ### 실행
+### 실행
 
 ![image](https://user-images.githubusercontent.com/66653324/104591412-fedb9100-56af-11eb-98f7-58e842fc881c.png)
