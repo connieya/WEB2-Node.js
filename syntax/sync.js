@@ -1,6 +1,7 @@
 var fs = require('fs');
 
-/// readFileSync
+//readFileSync
+
 // console.log('A')
 // var result = fs.readFileSync('sample.txt' , 'utf8');
 // console.log(result);
