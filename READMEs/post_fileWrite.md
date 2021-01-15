@@ -73,3 +73,17 @@ form에서 제목으로 보낸 것을 파일 이름으로 생성할 수 있었�
 -------------------------------------------
 
 - 리다이렉트
+
+```javascript
+
+ fs.writeFile(`data/${title}` ,description, 'utf8', function(err){
+                    response.writeHead(302,{Location: `/?id=${title}`});
+                    response.end();
+                    
+                })
+
+```
+
+302 포트?? 로 보낸 뒤 template literal 으로 해당 url을 지정하면
+
+리다이렉트 끝!!
