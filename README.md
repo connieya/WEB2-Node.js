@@ -1,6 +1,7 @@
 # WEB2-Node.js
 
 - [Node.js 공식 문서](https://nodejs.org/en/docs/)
+- [Node.js에 대해 전반적으로 알고싶다면?](https://youtu.be/AkMjAlHwCy0)
 
 ## JavaScript의 기본문법 & Node.js의 주요 기능 & 웹앱
 - [Node.js의 파일읽기 기능](https://github.com/gunny6026/WEB2-Node.js/blob/master/READMEs/read.md)
