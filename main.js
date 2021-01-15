@@ -3,18 +3,18 @@ var fs = require('fs');
 var url = require('url');  // url == 모듈  , url이라는 모듈을 사용할 것이고 변수 명은 url이다.
 var qs = require('querystring')
 
-function templateHTML(title,list ,body){
+function templateHTML(title,list ,body ,control){
     return `
     <!doctype html>
     <html>
     <head>
-    <title>WEB2 - ${title}</title>
+    <title>WEB1 - ${title}</title>
     <meta charset="utf-8">
     </head>
     <body>
-    <h1><a href="/">WEB22</a></h1>
+    <h1><a href="/">WEB</a></h1>
      ${list}
-     <a href="/create">create</a>
+     ${control}
      ${body}
     <p>
     </body>
@@ -48,7 +48,8 @@ var app = http.createServer(function(request,response){
   //  console.log("url.parse(urls, true) : " , url.parse(urls, true))
 
     var pathname = url.parse(urls, true).pathname;
-        
+       
+    //WEB  welcome 화면
     if(pathname === '/'){
         if(queryData.id === undefined){
 
@@ -57,13 +58,15 @@ var app = http.createServer(function(request,response){
                 var title= "Welcome";
                 var description = "Hello, Node.js";
                 var list = templateList(fileList);
-                var template = templateHTML(title,list ,`<h2>${title}</h2><p>${description}</p>`);
+                var template = templateHTML(title,list ,
+                    `<h2>${title}</h2><p>${description}</p>`,
+                    `  <a href="/create">create</a> `);
 
                     response.writeHead(200);
                     response.end(template);
              
             } )
-         
+         // data 폴더안에 있는 css,HTML,JavaScipt 페이지 , url에 /?id=값  이 지정되어있음
         }else{
             fs.readdir('./data' ,function(error , fileList){
                 console.log("fileList ssssss : " , fileList.length);
@@ -73,7 +76,9 @@ var app = http.createServer(function(request,response){
                 // li 태그안에 a 태그 url 부분에  1.html, 2.html ,3.html 대신에
                 // id 값을 넣어 undefined 대신에 해당 값을 출력하게 할 수 있었다.     
                 var list = templateList(fileList);
-                var template = templateHTML(title, list ,`<h2>${title}</h2><p>${description}</p>`);
+                var template = templateHTML(title, list ,
+                    `<h2>${title}</h2><p>${description}</p>`,
+                    `  <a href="/create">create</a> <a href="/update?id=${title}">update</a>`);
                 response.writeHead(200);
                 response.end(template);
             })
@@ -101,7 +106,8 @@ var app = http.createServer(function(request,response){
              <input type="submit" value="등록" class="btn btn-primary">
             </form>
             
-            `);
+            ` ,
+            '');
 
                 response.writeHead(200);
                 response.end(template);
@@ -120,11 +126,39 @@ var app = http.createServer(function(request,response){
                 var description = post.description;
                 console.log("post" , post);      // 'end'에 해당하는 callback함수
                 fs.writeFile(`data/${title}` ,description, 'utf8', function(err){
-                    response.writeHead(200);
-                    response.end('success');
+                    response.writeHead(302,{Location: `/?id=${title}`});
+                    response.end();
                     
                 })
         });
+    }else if(pathname == `/update`){
+        fs.readdir('./data' ,function(error , fileList){
+    
+             var title = queryData.id;
+        fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
+            var list = templateList(fileList);
+            var template = templateHTML(title, list ,
+                ` <form action="/update_process" method="POST">
+                <div>
+                <input type="hidden" name="id" value="${title}" placeholder="제목을 입력하세요">
+                </div>
+                <div>
+                    <input type="text" name="title" value="${title}" placeholder="제목을 입력하세요">
+                </div>
+                
+                <div>
+                
+                    <textarea  name="description" placeholder="내용을 입력하세요">${description}</textarea>
+                </div>
+                 <input type="submit" value="등록" class="btn btn-primary">
+                </form>
+                `,
+                `  <a href="/create">create</a> <a href="/update?id=${title}">update</a>`);
+            response.writeHead(200);
+            response.end(template);
+        })
+    })
+    
     }else {
         response.writeHead(404);
         response.end('Not found');
