@@ -151,9 +151,14 @@ var app = http.createServer(function(request,response){
                     <textarea  name="description" placeholder="내용을 입력하세요">${description}</textarea>
                 </div>
                  <input type="submit" value="등록" class="btn btn-primary">
+               
+                </form>
+                <form action="/delete" method="post">
+                    <input type="hidden" name="id" value="${title}">
+                    <input type="submit" onclick="return confirm('정말로 삭제하시겠습니까?')"  value="삭제" />
                 </form>
                 `,
-                `  <a href="/create">create</a> <a href="/update?id=${title}">update</a>`);
+                `  <a href="/?id=${title}">돌아가기</a> `);
             response.writeHead(200);
             response.end(template);
         })
@@ -184,6 +189,31 @@ var app = http.createServer(function(request,response){
                 
         });
 
+    }else if(pathname === '/delete'){
+
+        var body = '';
+        request.on('data' , function(data){
+            body += data; // callback 될 때마다 데이터를 추가??
+        });
+
+        request.on('end', function(){
+                var post = qs.parse(body);
+                console.log("post.id : " ,post.id);
+                var id = post.id;
+                
+                
+
+                fs.unlink(`data/${id}` ,function(error){
+                    response.writeHead(302,{Location: `/`});;
+                    response.end();
+
+                })
+            
+               
+                
+        });
+    
+    
     }
     else {
         response.writeHead(404);
