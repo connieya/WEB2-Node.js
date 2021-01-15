@@ -1,52 +1,12 @@
 var http = require('http');
 var fs = require('fs');
 var url = require('url');  // url == 모듈  , url이라는 모듈을 사용할 것이고 변수 명은 url이다.
-var qs = require('querystring')
-
-function templateHTML(title,list ,body ,control){
-    return `
-    <!doctype html>
-    <html>
-    <head>
-    <title>WEB1 - ${title}</title>
-    <meta charset="utf-8">
-    </head>
-    <body>
-    <h1><a href="/">WEB</a></h1>
-     ${list}
-     ${control}
-     ${body}
-    <p>
-    </body>
-    </html>
-    
-    
-    `;
-}
-
-function templateList(fileList){
-    var list = '<ul>';
-    for(var i=0 ; i< fileList.length; i++){
-
-        list = list + `<a href="/?id=${fileList[i]}"><li>${fileList[i]}</li></a>`
-    }
-    list = list + '</ul>'
-
-    return list;
-}
-
-
+var qs = require('querystring');
+var template = require('./lib/template.js');
 
 var app = http.createServer(function(request,response){
     var urls = request.url;
     var queryData = url.parse(urls, true).query;
-   
-   // console.log("url : " , url);
-   // console.log("queryData : " ,queryData);
-   // console.log("queryData.id : " ,queryData.id);
-   
-  //  console.log("url.parse(urls, true) : " , url.parse(urls, true))
-
     var pathname = url.parse(urls, true).pathname;
        
     //WEB  welcome 화면
@@ -57,13 +17,13 @@ var app = http.createServer(function(request,response){
                 console.log("fileList ssssss : " , fileList.length);
                 var title= "Welcome";
                 var description = "Hello, Node.js";
-                var list = templateList(fileList);
-                var template = templateHTML(title,list ,
+                var list = template.list(fileList);
+                var html = template.HTML(title,list ,
                     `<h2>${title}</h2><p>${description}</p>`,
                     `  <a href="/create">create</a> `);
 
                     response.writeHead(200);
-                    response.end(template);
+                    response.end(html);
              
             } )
          // data 폴더안에 있는 css,HTML,JavaScipt 페이지 , url에 /?id=값  이 지정되어있음
@@ -75,12 +35,12 @@ var app = http.createServer(function(request,response){
                 // 왜 console에 값이 두 번씩 찍히냐고...
                 // li 태그안에 a 태그 url 부분에  1.html, 2.html ,3.html 대신에
                 // id 값을 넣어 undefined 대신에 해당 값을 출력하게 할 수 있었다.     
-                var list = templateList(fileList);
-                var template = templateHTML(title, list ,
+                var list = template.list(fileList);
+                var html = template.HTML(title, list ,
                     `<h2>${title}</h2><p>${description}</p>`,
                     `  <a href="/create">create</a> <a href="/update?id=${title}">update</a>`);
                 response.writeHead(200);
-                response.end(template);
+                response.end(html);
             })
         })
         }        
@@ -92,8 +52,8 @@ var app = http.createServer(function(request,response){
         fs.readdir('./data' ,function(error , fileList){
             console.log("fileList ssssss : " , fileList.length);
             var title= "WEB- create";
-            var list = templateList(fileList);
-            var template = templateHTML(title,list ,`
+            var list = template.list(fileList);
+            var html = template.HTML(title,list ,`
             <form action="/create_process" method="POST">
             <div>
                 <input type="text" name="title" placeholder="제목을 입력하세요">
@@ -110,7 +70,7 @@ var app = http.createServer(function(request,response){
             '');
 
                 response.writeHead(200);
-                response.end(template);
+                response.end(html);
          
         } )
 
@@ -136,8 +96,8 @@ var app = http.createServer(function(request,response){
     
              var title = queryData.id;
         fs.readFile(`data/${queryData.id}`,'utf8',function(err,description){
-            var list = templateList(fileList);
-            var template = templateHTML(title, list ,
+            var list = template.list(fileList);
+            var html = template.HTML(title, list ,
                 ` <form action="/update_process" method="POST">
                 <div>
                 <input type="hidden" name="id" value="${title}" placeholder="제목을 입력하세요">
@@ -150,7 +110,7 @@ var app = http.createServer(function(request,response){
                 
                     <textarea  name="description" placeholder="내용을 입력하세요">${description}</textarea>
                 </div>
-                 <input type="submit" value="등록" class="btn btn-primary">
+                 <input type="submit" value="수정" class="btn btn-primary">
                
                 </form>
                 <form action="/delete" method="post">
@@ -160,7 +120,7 @@ var app = http.createServer(function(request,response){
                 `,
                 `  <a href="/?id=${title}">돌아가기</a> `);
             response.writeHead(200);
-            response.end(template);
+            response.end(html);
         })
     })
     
